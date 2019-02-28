@@ -4,34 +4,44 @@ class Input{
 	//constructor takes in a a target input element
 	//should also construct variables for the range, the pattern, and the element that will hold the error message
 	//range min and max should default to null
-	constructor( ){
-
+	constructor(target_element){
+		this.range = {
+			min: null,
+			max: null
+		}
+		this.pattern = null;
+		this.element = $(target_element);
 	}
 	//setRange sets the minimum and maximum range, if necessary, for the input
 	//arguments : min (a number), and max (a number)
 	//returns: nothing
 	//purpose: sets the min and max values for the object
-	setRange(  ){
-
+	setRange(min, max){
+		this.range.min = min;
+		this.range.max = max;
 	}
 	//getRange gets the minimum and maximum range.
 	//arguments: nothing
 	//returns: an object with a property of min, and a property of max, containing the minimum and maximum numbers
 	getRange(){
-		
+		var new_object = {
+			min: this.range.min,
+			max: this.range.max
+		}
+		return new_object;
 	}
 	//setPattern saves a regex pattern into the object
 	//arguments: pattern (a regular expression.  if you don't know what it is, you will learn it soon)
 	//returns: nothing
 	//saves the given pattern into the object
-	setPattern(  ){
-		
+	setPattern(regex){
+		this.pattern = regex;
 	}
 	//getPattern returns the currently stored pattern of the input object
 	//arguments: nothing
 	//returns: the currently stored regex pattern
 	getPattern(){
-		
+		return this.pattern;
 	}
 	//test runs all current tests on the target input and returns an object with data about whether the input passed or not
 	//arguments: nothing
@@ -50,7 +60,9 @@ class Input{
 		if it is still null, no range has been set, so don't test it
 			if it is not null, then test the range */
 	test(){
-
+		var object = {
+			result: null,
+		}
 	}
 	/*
 	showError: takes in a message, creates a dom element, and then positions that dom Element directly below the input
