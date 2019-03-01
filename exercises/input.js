@@ -6,7 +6,7 @@ class Input {
 		this.range = {
 			min: null,
 			max: null
-		}
+		};
 		this.regex = null;
 		this.targetInput = $(target_input);
 
@@ -60,40 +60,25 @@ class Input {
 		if it is still null, no range has been set, so don't test it
 			if it is not null, then test the range */
 	test() {
-		// return true if in range, otherwise false
 		var object = {};
 		var newRegex = new RegExp(this.regex);
+		var value = this.targetInput.val();
 
-		if (newRegex.test(this.targetInput.val()) && this.range.min === null) {
-			object = {
-				result: true,
-			}
-		} else if (newRegex.test(this.targetInput.val()) && this.range.min !== null) {
-			if (this.range.min < parseInt(this.targetInput.val()) && parseInt(this.targetInput.val()) < this.range.max) {
+		if (newRegex.test(value) && this.range.min === null) {
+			object.result = true;
+
+		} else if (!newRegex.test(value) && this.range.min === null) { 
+			object.result = false;
+			object.error = "pattern";
+
+		} else if (newRegex.test(value) && this.range.min !== null) {
+			if (this.range.min < value && value < this.range.max) {
 				object.result = true;
 			} else {
 				object.result = false;
-			}
-		} else {
-			if (this.targetInput.val() !== newRegex) {
-				object = {
-					result: false,
-					error: "pattern"
-				}
-			} else {
-				object = {
-					result: false,
-					error: "range"
-				}
+				object.error = "range";
 			}
 		}
-		// if (this.range.min !== null) {
-		// 	if (this.range.min < newRegex < this.range.max) {
-		// 		object.result = true;
-		// 	} else {
-		// 		object.result = false;
-		// 	}
-		// }
 		return object;
 	}
 	/*
@@ -114,13 +99,21 @@ class Input {
 		Don't store the CSS selector, you made the element, store the direct dom object itself!
 		*/
 	showError(str) {
-		alert($("input").parent());
-		var inputError = $("<div>").addClass("inputError").text(str).css({
-			left: 92.640625,
-			top: 360
-		});
-		$("#inputTest1").append(inputError);
+		var position = this.targetInput.position();
+		var height = this.targetInput.height();
+
+		var parentElement = this.targetInput.parent();
+
+		var inputError = $("<div>").addClass("inputError").css({
+			left: position.left,
+			top: position.top + height,
+		}).text(str);
+
+
+		parentElement.append(inputError);
+
 	}
+
 	/*
 	hideError removes the error dom element from the DOM for the given input
 	arguments: none
@@ -129,6 +122,6 @@ class Input {
 		removes the dom element in question (https://www.w3schools.com/jquery/html_remove.asp)
 		*/
 	hideError() {
-		$(inputError).remove();
+		$(".inputError").remove();
 	}
 }
