@@ -110,7 +110,7 @@ class Input {
 			top: position.top + height,
 		}).text(str);
 
-		this.errorMessage = inputError;
+		this.errorMessage = inputError; //stores a reference to the dom element
 		parentElement.append(inputError);
 
 	}
