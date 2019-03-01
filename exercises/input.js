@@ -1,29 +1,29 @@
-
-
-class Input{
+class Input {
 	//constructor takes in a a target input element
 	//should also construct variables for the range, the pattern, and the element that will hold the error message
 	//range min and max should default to null
-	constructor(target_element){
+	constructor(target_input) {
 		this.range = {
 			min: null,
 			max: null
 		}
-		this.pattern = null;
-		this.element = $(target_element);
+		this.regex = null;
+		this.targetInput = $(target_input);
+
+		// this.regex_test = this.targetInput.val();
 	}
 	//setRange sets the minimum and maximum range, if necessary, for the input
 	//arguments : min (a number), and max (a number)
 	//returns: nothing
 	//purpose: sets the min and max values for the object
-	setRange(min, max){
+	setRange(min, max) {
 		this.range.min = min;
 		this.range.max = max;
 	}
 	//getRange gets the minimum and maximum range.
 	//arguments: nothing
 	//returns: an object with a property of min, and a property of max, containing the minimum and maximum numbers
-	getRange(){
+	getRange() {
 		var new_object = {
 			min: this.range.min,
 			max: this.range.max
@@ -34,20 +34,20 @@ class Input{
 	//arguments: pattern (a regular expression.  if you don't know what it is, you will learn it soon)
 	//returns: nothing
 	//saves the given pattern into the object
-	setPattern(regex){
-		this.pattern = regex;
+	setPattern(regex) {
+		this.regex = regex;
 	}
 	//getPattern returns the currently stored pattern of the input object
 	//arguments: nothing
 	//returns: the currently stored regex pattern
-	getPattern(){
-		return this.pattern;
+	getPattern() {
+		return this.regex;
 	}
 	//test runs all current tests on the target input and returns an object with data about whether the input passed or not
 	//arguments: nothing
 	//returns: an objct with a property of result (true/false), and an optional property of "error" if result was false
-		//if the input's value failed because it didn't match the regex pattern, error will be "pattern"
-		//if the input's value failed because it didn't match the range, error will be "range"
+	//if the input's value failed because it didn't match the regex pattern, error will be "pattern"
+	//if the input's value failed because it didn't match the range, error will be "range"
 	/*notes:
 		let's say your property for youregex pattren was this.regex, 
 		and your property for your input was this.targetInput
@@ -59,10 +59,42 @@ class Input{
 		also needs to test the range, but note that the range is null by default
 		if it is still null, no range has been set, so don't test it
 			if it is not null, then test the range */
-	test(){
-		var object = {
-			result: null,
+	test() {
+		// return true if in range, otherwise false
+		var object = {};
+		var newRegex = new RegExp(this.regex);
+
+		if (newRegex.test(this.targetInput.val()) && this.range.min === null) {
+			object = {
+				result: true,
+			}
+		} else if (newRegex.test(this.targetInput.val()) && this.range.min !== null) {
+			if (this.range.min < parseInt(this.targetInput.val()) && parseInt(this.targetInput.val()) < this.range.max) {
+				object.result = true;
+			} else {
+				object.result = false;
+			}
+		} else {
+			if (this.targetInput.val() !== newRegex) {
+				object = {
+					result: false,
+					error: "pattern"
+				}
+			} else {
+				object = {
+					result: false,
+					error: "range"
+				}
+			}
 		}
+		// if (this.range.min !== null) {
+		// 	if (this.range.min < newRegex < this.range.max) {
+		// 		object.result = true;
+		// 	} else {
+		// 		object.result = false;
+		// 	}
+		// }
+		return object;
 	}
 	/*
 	showError: takes in a message, creates a dom element, and then positions that dom Element directly below the input
@@ -81,8 +113,13 @@ class Input{
 		MAKE SURE TO STORE the reference to the dom element in the object for later use!
 		Don't store the CSS selector, you made the element, store the direct dom object itself!
 		*/
-	showError(  ){
-
+	showError(str) {
+		alert($("input").parent());
+		var inputError = $("<div>").addClass("inputError").text(str).css({
+			left: 92.640625,
+			top: 360
+		});
+		$("#inputTest1").append(inputError);
 	}
 	/*
 	hideError removes the error dom element from the DOM for the given input
@@ -91,7 +128,7 @@ class Input{
 	note: 
 		removes the dom element in question (https://www.w3schools.com/jquery/html_remove.asp)
 		*/
-	hideError(){
-		
+	hideError() {
+		$(inputError).remove();
 	}
 }
