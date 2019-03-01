@@ -8,6 +8,7 @@ class Input {
 			max: null
 		};
 		this.regex = null;
+		this.errorMessage = null;
 		this.targetInput = $(target_input);
 
 		// this.regex_test = this.targetInput.val();
@@ -109,7 +110,7 @@ class Input {
 			top: position.top + height,
 		}).text(str);
 
-
+		this.errorMessage = inputError;
 		parentElement.append(inputError);
 
 	}
@@ -122,6 +123,6 @@ class Input {
 		removes the dom element in question (https://www.w3schools.com/jquery/html_remove.asp)
 		*/
 	hideError() {
-		$(".inputError").remove();
+		this.errorMessage.remove();
 	}
 }
