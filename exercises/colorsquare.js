@@ -14,14 +14,14 @@
 
 	class ColorSquare {
 		constructor(availableColors, index, str) {
-			this.availableColors = [];
-			this.currentColor = availableColors[index];
+			this.availableColors = availableColors;
+			this.colorIndex = index;
 			this.class = str;
 
-			this.handleClick = this.handleClick.bind(this);
-
-			this.currentColorDomElement = null;
+			this.currentColorDomElement;
 			this.rightNeighbor = null;
+
+			this.handleClick = this.handleClick.bind(this);
 		}
 
 		/*setter function for the property neighbor
@@ -67,15 +67,17 @@
 				make sure the rightNeighbor is something!  the rightmost element won't have a neighbor
 			*/
 		handleClick() {
-				this.currentColorDomElement = this.currentColor[+1];
-				this.currentColorDomElement.on("click", this.changeColor);
-
-				if (this.rightNeighbor !== null) {
-					this.rightNeighbor.handleClick();
-				} else {
-					return;
-				}
+			if (this.colorIndex<this.availableColors.length - 1){
+				this.colorIndex++;
+			} else {
+				this.colorIndex = 0;
 			}
+			this.currentColorDomElement.css("background-color", this.availableColors[this.colorIndex]);
+
+			if (this.rightNeighbor !== null) {
+				this.rightNeighbor.handleClick();
+			}
+		}
 		
 		//make sure the rightNeighbor is something!  the rightmost element won't have a neighbor
 	/*
@@ -88,7 +90,7 @@
 		changes the current object's dom element's backgound color to the argument color
 	*/
 	changeColor(color) {
-		this.currentColorDomElement = this.currentColorDomElement.css('background-color', color)
+		this.currentColorDomElement.css('background-color', color);
 	}
 	/*
 	render / generate the dom element for the current object 
@@ -104,7 +106,10 @@
 		return the dom element that was generated. 
 	*/
 	render() {
-		this.currentColorDomElement = $("<div>").addClass(this.class).on('click', this.handleClick).css('background-color', this.currentColor);
+		this.currentColorDomElement = $("<div>");
+		this.currentColorDomElement.addClass(this.class);
+		this.currentColorDomElement.on("click", this.handleClick);
+		this.currentColorDomElement.css("background-color", this.colorIndex);
 		return this.currentColorDomElement;
 	}
 }
